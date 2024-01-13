@@ -1,1 +1,0 @@
-circleX, circleY, circleRadius
