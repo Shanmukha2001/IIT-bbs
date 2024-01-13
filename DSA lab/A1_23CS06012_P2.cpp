@@ -8,13 +8,14 @@ struct Rectangle
 
     bool operator<(const Rectangle &otherPoint) const
     {
-        if (x > otherPoint.x)
-            return true;
-        else if (x == otherPoint.x && pos > otherPoint.pos)
-            return true;
-        else if (x == otherPoint.x && pos == otherPoint.pos && h > otherPoint.h)
-            return true;
-        return false;
+        if (x != otherPoint.x)
+            return x > otherPoint.x;
+
+        if (pos == 1 && otherPoint.pos == 1)
+            return h > otherPoint.h;
+        else if (pos == -1 && otherPoint.pos == -1)
+            return h < otherPoint.h;
+        return pos > otherPoint.pos;
     }
 };
 
@@ -36,32 +37,41 @@ int main()
 
         r.pos = -1;
         points.push_back(r);
-        priorityQ.push(r);
+        // priorityQ.push(r);
 
         r.x = y;
         r.pos = 1;
         points.push_back(r);
-        priorityQ.push(r);
+        // priorityQ.push(r);
     }
 
     vector<pair<int, int>> out;
     multiset<int> maxHeap;
+    int prevMaxHeight = 0;
     maxHeap.insert(0);
     int top;
+
+    for (auto p : points)
+    {
+        priorityQ.push(p);
+    }
+
     while (!priorityQ.empty())
     {
-        top = *maxHeap.rbegin();
-        Rectangle topRectangle = priorityQ.top();
-        std::cout << "x: " << topRectangle.x << ", height: " << topRectangle.h << ", pos: " << topRectangle.pos << std::endl;
-        if (topRectangle.pos == -1)
-            maxHeap.insert(topRectangle.h);
-        else
-            maxHeap.erase(maxHeap.find(topRectangle.h));
-
-        if (!maxHeap.empty() && top != *maxHeap.rbegin())
-            out.push_back(make_pair(topRectangle.x, *maxHeap.rbegin()));
-            
+        Rectangle currentRectangle = priorityQ.top();
         priorityQ.pop();
+
+        if (currentRectangle.pos == -1)
+            maxHeap.insert(currentRectangle.h);
+        else
+            maxHeap.erase(maxHeap.find(currentRectangle.h));
+
+        int currentMaxHeight = *maxHeap.rbegin();
+        if (currentMaxHeight != prevMaxHeight)
+        {
+            out.push_back(make_pair(currentRectangle.x, currentMaxHeight));
+            prevMaxHeight = currentMaxHeight;
+        }
     }
 
     for (auto &point : out)
