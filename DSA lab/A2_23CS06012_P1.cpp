@@ -8,14 +8,14 @@ struct node
     struct node *next;
 };
 
-void sortListWithDuplicates(int a[], struct node *&head)
+void sortListWithDuplicates(int a[],int n1, struct node *&head)
 {
     struct node *n, *tempHead;
     head = new node;
     head->data = a[0];
     head->next = NULL;
     tempHead = head;
-    for (int i = 1; i < 10; i++)
+    for (int i = 1; i < n1; i++)
     {
         n = new node;
         n->data = a[i];
@@ -63,7 +63,7 @@ void reverseList(struct node *&head, int k)
     struct node* curr = head;
     struct node* nxt = curr->next;
     
-    while(k-->0){
+    while((k--)>0 && curr!=NULL){
         curr->next = prev;
         prev = curr;
         curr = nxt;
@@ -85,11 +85,18 @@ void printList(struct node *head)
 
 int main()
 {
-    int n = 10, k;
-    int a[10] = {8, 7, 1, 1, 8, 9, 6, 3, 4};
+    // int n = 10, k;
+    // int a[10] = {8, 7, 1, 1, 8, 9, 6, 3, 2, 4};
+    int n,k;
+    cout <<"n:";
+    cin >>n;
+    int a[n];
+    for(int i=0;i<n;i++)
+        cin >> a[i];
     struct node *head = NULL;
+    cout <<"k:";
     cin >> k;
-    sortListWithDuplicates(a, head);
+    sortListWithDuplicates(a,n, head);
     printList(head);
     removeDuplicates(head);
     printList(head);
